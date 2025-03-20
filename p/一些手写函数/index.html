@@ -1,0 +1,1920 @@
+<!DOCTYPE html>
+<html lang="zh-cn" dir="ltr">
+    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="手写 1.1 深拷贝实现 1.1.1 利用JSON.stringify和JSON.parse 1 2 3 4 5 6 function deepFunc(obj){ const obj2 = JSON.parse(JSON.stringify(obj)); return obj2; } // 缺点：不能处理函数、symbol类型的属性、Date对象、RegExp对象，会在序列化过程中丢失，不能处理循环引用的对象，会导致报错。 1.1.2 递归实现 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 function deepFunc(obj){ // 2.利用递归深拷贝 // 基本数据类型不存在嵌套结构 所以直接返回该值 不需要进一步递归处理 if (typeof obj !== &#39;object&#39; || obj === null) { return obj; } // 如果obj为数组 则创建一个空数组 进行递归处理 if (Array.isArray(obj)) { const clone = []; for (let i = 0; i &lt; obj.length; i++) { clone[i] = deepFunc(obj[i]); } return clone; } // 如果obj为对象 则创建一个空对象 进行递归处理 const clone = {}; for (const key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { clone[key] = deepFunc(obj[key]); } } return clone; } 1.2 手写apply、call、bind 用于改变this指向\n">
+<title>一些手写函数</title>
+
+<link rel='canonical' href='http://localhost:1313/p/%E4%B8%80%E4%BA%9B%E6%89%8B%E5%86%99%E5%87%BD%E6%95%B0/'>
+
+<link rel="stylesheet" href="/scss/style.min.663803bebe609202d5b39d848f2d7c2dc8b598a2d879efa079fa88893d29c49c.css"><meta property='og:title' content="一些手写函数">
+<meta property='og:description' content="手写 1.1 深拷贝实现 1.1.1 利用JSON.stringify和JSON.parse 1 2 3 4 5 6 function deepFunc(obj){ const obj2 = JSON.parse(JSON.stringify(obj)); return obj2; } // 缺点：不能处理函数、symbol类型的属性、Date对象、RegExp对象，会在序列化过程中丢失，不能处理循环引用的对象，会导致报错。 1.1.2 递归实现 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 function deepFunc(obj){ // 2.利用递归深拷贝 // 基本数据类型不存在嵌套结构 所以直接返回该值 不需要进一步递归处理 if (typeof obj !== &#39;object&#39; || obj === null) { return obj; } // 如果obj为数组 则创建一个空数组 进行递归处理 if (Array.isArray(obj)) { const clone = []; for (let i = 0; i &lt; obj.length; i++) { clone[i] = deepFunc(obj[i]); } return clone; } // 如果obj为对象 则创建一个空对象 进行递归处理 const clone = {}; for (const key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { clone[key] = deepFunc(obj[key]); } } return clone; } 1.2 手写apply、call、bind 用于改变this指向\n">
+<meta property='og:url' content='http://localhost:1313/p/%E4%B8%80%E4%BA%9B%E6%89%8B%E5%86%99%E5%87%BD%E6%95%B0/'>
+<meta property='og:site_name' content='个人博客'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2025-02-22T16:31:07&#43;08:00'/><meta property='article:modified_time' content='2025-02-22T16:31:07&#43;08:00'/>
+<meta name="twitter:title" content="一些手写函数">
+<meta name="twitter:description" content="手写 1.1 深拷贝实现 1.1.1 利用JSON.stringify和JSON.parse 1 2 3 4 5 6 function deepFunc(obj){ const obj2 = JSON.parse(JSON.stringify(obj)); return obj2; } // 缺点：不能处理函数、symbol类型的属性、Date对象、RegExp对象，会在序列化过程中丢失，不能处理循环引用的对象，会导致报错。 1.1.2 递归实现 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 function deepFunc(obj){ // 2.利用递归深拷贝 // 基本数据类型不存在嵌套结构 所以直接返回该值 不需要进一步递归处理 if (typeof obj !== &#39;object&#39; || obj === null) { return obj; } // 如果obj为数组 则创建一个空数组 进行递归处理 if (Array.isArray(obj)) { const clone = []; for (let i = 0; i &lt; obj.length; i++) { clone[i] = deepFunc(obj[i]); } return clone; } // 如果obj为对象 则创建一个空对象 进行递归处理 const clone = {}; for (const key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { clone[key] = deepFunc(obj[key]); } } return clone; } 1.2 手写apply、call、bind 用于改变this指向\n">
+    <link rel="shortcut icon" href="/favicon.ico" />
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    
+                    
+                    
+                        
+                        <img src="/img/avatar_hu_fac1dd980b5f6ef0.jpeg" width="300"
+                            height="300" class="site-logo" loading="lazy" alt="Avatar">
+                    
+                
+                </a>
+                
+                    <span class="emoji">💖</span>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">个人博客</a></h1>
+            <h2 class="site-description">演示说明</h2>
+        </div>
+    </header><ol class="menu-social">
+            
+                <li>
+                    <a 
+                        href='https://github.com/CaiJimmy/hugo-theme-stack'
+                        target="_blank"
+                        title="GitHub"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+                <li>
+                    <a 
+                        href='https://twitter.com'
+                        target="_blank"
+                        title="Twitter"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-twitter" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M22 4.01c-1 .49 -1.98 .689 -3 .99c-1.121 -1.265 -2.783 -1.335 -4.38 -.737s-2.643 2.06 -2.62 3.737v1c-3.245 .083 -6.135 -1.395 -8 -4c0 0 -4.182 7.433 4 11c-1.872 1.247 -3.739 2.088 -6 2c3.308 1.803 6.913 2.423 10.034 1.517c3.58 -1.04 6.522 -3.723 7.651 -7.742a13.84 13.84 0 0 0 .497 -3.753c-.002 -.249 1.51 -2.772 1.818 -4.013z" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>主页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/%E5%85%B3%E4%BA%8E/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/archives/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>Archives</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/search/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>Search</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/links/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" />
+  <path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" />
+</svg>
+
+
+
+                
+                <span>Links</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+                    
+                        <li id="i18n-switch">  
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-language" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M4 5h7" />
+  <path d="M9 3v2c0 4.418 -2.239 8 -5 8" />
+  <path d="M5 9c-.003 2.144 2.952 3.908 6.7 4" />
+  <path d="M12 20l4 -9l4 9" />
+  <path d="M19.1 18h-6.2" />
+</svg>
+
+
+
+                            <select name="language" title="language" onchange="window.location.href = this.selectedOptions[0].value">
+                                
+                                    <option value="http://localhost:1313/" selected>中文</option>
+                                
+                                    <option value="http://localhost:1313/en/" >English</option>
+                                
+                                    <option value="http://localhost:1313/ar/" >عربي</option>
+                                
+                            </select>
+                        </li>
+                    
+                
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">目录</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#手写">手写</a>
+      <ol>
+        <li><a href="#11-深拷贝实现">1.1 深拷贝实现</a>
+          <ol>
+            <li><a href="#111-利用jsonstringify和jsonparse">1.1.1 利用<code>JSON.stringify</code>和<code>JSON.parse</code></a></li>
+            <li><a href="#112-递归实现">1.1.2 递归实现</a></li>
+          </ol>
+        </li>
+        <li><a href="#12-手写applycallbind">1.2 手写apply、call、bind</a>
+          <ol>
+            <li><a href="#121-手写call方法">1.2.1 手写call方法</a></li>
+            <li><a href="#122-手写apply方法">1.2.2 手写apply方法</a></li>
+            <li><a href="#123-手写bind方法">1.2.3 手写bind方法</a></li>
+          </ol>
+        </li>
+        <li><a href="#13-事件循环">1.3 事件循环</a></li>
+        <li><a href="#14-函数柯里化">1.4 函数柯里化</a></li>
+        <li><a href="#15-数组扁平化">1.5 数组扁平化</a>
+          <ol>
+            <li><a href="#151-递归实现">1.5.1 递归实现</a></li>
+            <li><a href="#152-使用reduce">1.5.2 使用reduce</a></li>
+          </ol>
+        </li>
+        <li><a href="#16-prototype">1.6 <code>prototype</code></a></li>
+        <li><a href="#17-symbol">1.7 Symbol</a>
+          <ol>
+            <li><a href="#171-基本概念">1.7.1 基本概念</a></li>
+            <li><a href="#172-symbol作为对象的属性键">1.7.2 Symbol作为对象的属性键</a></li>
+            <li><a href="#173-symbol的隐藏属性">1.7.3 Symbol的隐藏属性</a></li>
+            <li><a href="#174-全局symbol">1.7.4 全局Symbol</a></li>
+          </ol>
+        </li>
+        <li><a href="#18-promise">1.8 promise</a></li>
+        <li><a href="#19-防抖节流">1.9 防抖/节流</a></li>
+        <li><a href="#场景">场景</a></li>
+        <li><a href="#21-js超过number最大值的数怎么处理">2.1 js超过Number最大值的数怎么处理</a></li>
+        <li><a href="#22-如何解决页面请求接口大规模并发问题">2.2 如何解决页面请求接口大规模并发问题</a></li>
+        <li><a href="#23-请说说大文件上传">2.3 请说说大文件上传</a></li>
+        <li><a href="#24-在前端怎么实现页面截图">2.4 在前端怎么实现页面截图</a></li>
+        <li><a href="#25-移动端适配问题如何解决">2.5 移动端适配问题如何解决</a></li>
+        <li><a href="#26-如何修改第三方npm包">2.6 如何修改第三方npm包</a></li>
+        <li><a href="#27-当qps达到峰值时该如何处理">2.7 当QPS达到峰值时，该如何处理</a></li>
+        <li><a href="#28-如何实现网页加载进度条">2.8 如何实现网页加载进度条</a></li>
+      </ol>
+    </li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/%E4%B8%80%E4%BA%9B%E6%89%8B%E5%86%99%E5%87%BD%E6%95%B0/">一些手写函数</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Feb 22, 2025</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    阅读时长: 10 分钟
+                </time>
+            </div>
+        
+    </footer>
+    
+
+    
+</div>
+
+</header>
+
+    <section class="article-content">
+    
+    
+    <h2 id="手写">手写
+</h2><h3 id="11-深拷贝实现">1.1 深拷贝实现
+</h3><h4 id="111-利用jsonstringify和jsonparse">1.1.1 利用<code>JSON.stringify</code>和<code>JSON.parse</code>
+</h4><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kd">function</span> <span class="nx">deepFunc</span><span class="p">(</span><span class="nx">obj</span><span class="p">){</span>
+</span></span><span class="line"><span class="cl">    <span class="kr">const</span> <span class="nx">obj2</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">obj</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="nx">obj2</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// 缺点：不能处理函数、symbol类型的属性、Date对象、RegExp对象，会在序列化过程中丢失，不能处理循环引用的对象，会导致报错。
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="112-递归实现">1.1.2 递归实现
+</h4><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kd">function</span> <span class="nx">deepFunc</span><span class="p">(</span><span class="nx">obj</span><span class="p">){</span>
+</span></span><span class="line"><span class="cl">  <span class="c1">// 2.利用递归深拷贝
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>  <span class="c1">// 基本数据类型不存在嵌套结构 所以直接返回该值 不需要进一步递归处理
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>  <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">obj</span> <span class="o">!==</span> <span class="s1">&#39;object&#39;</span> <span class="o">||</span> <span class="nx">obj</span> <span class="o">===</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="nx">obj</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="c1">// 如果obj为数组 则创建一个空数组 进行递归处理
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>  <span class="k">if</span> <span class="p">(</span><span class="nb">Array</span><span class="p">.</span><span class="nx">isArray</span><span class="p">(</span><span class="nx">obj</span><span class="p">))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kr">const</span> <span class="nx">clone</span> <span class="o">=</span> <span class="p">[];</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">obj</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">clone</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="nx">deepFunc</span><span class="p">(</span><span class="nx">obj</span><span class="p">[</span><span class="nx">i</span><span class="p">]);</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="nx">clone</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl">  <span class="c1">// 如果obj为对象 则创建一个空对象 进行递归处理
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>  <span class="kr">const</span> <span class="nx">clone</span> <span class="o">=</span> <span class="p">{};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="k">for</span> <span class="p">(</span><span class="kr">const</span> <span class="nx">key</span> <span class="k">in</span> <span class="nx">obj</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="nb">Object</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nx">obj</span><span class="p">,</span> <span class="nx">key</span><span class="p">))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">clone</span><span class="p">[</span><span class="nx">key</span><span class="p">]</span> <span class="o">=</span> <span class="nx">deepFunc</span><span class="p">(</span><span class="nx">obj</span><span class="p">[</span><span class="nx">key</span><span class="p">]);</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl">  <span class="k">return</span> <span class="nx">clone</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="12-手写applycallbind">1.2 手写apply、call、bind
+</h3><p><em><strong>用于改变this指向</strong></em></p>
+<h4 id="121-手写call方法">1.2.1 手写call方法
+</h4><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"></code></pre></td></tr></table>
+</div>
+</div><h4 id="122-手写apply方法">1.2.2 手写apply方法
+</h4><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"></code></pre></td></tr></table>
+</div>
+</div><h4 id="123-手写bind方法">1.2.3 手写bind方法
+</h4><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"></code></pre></td></tr></table>
+</div>
+</div><h3 id="13-事件循环">1.3 事件循环
+</h3><ul>
+<li>javascript是单线程编程语言，同一时间执行一个任务。事件循环是js实现异步编程的核心机制，它允许程序在执行异步操作时不会阻塞主线程。</li>
+<li>相关组件：
+<ul>
+<li>调用栈：执行栈，后进先出。用于存储正在执行的函数调用。当调用一个函数时，会将该函数的执行上下文压入调用栈；当函数执行完毕后，会将其执行上下文从调用栈中弹出。</li>
+<li>任务队列：用于储存异步操作完成后的回调函数。分为宏任务和微任务。</li>
+<li>事件循环：负责不断地从任务队列中取出任务并将其放入调用栈中执行。</li>
+</ul>
+</li>
+<li>工作流程：
+<ul>
+<li>执行同步代码，同步代码放入调用栈中执行，异步操作由浏览器处理。</li>
+<li>异步操作完成后，对应的回调函数放入任务队列。</li>
+<li>处理微任务队列。</li>
+<li>处理宏任务队列。</li>
+<li>循环执行3和4，知道任务队列和调用栈都为空。</li>
+</ul>
+</li>
+</ul>
+<h3 id="14-函数柯里化">1.4 函数柯里化
+</h3><p>函数柯里化就是<em><strong>把一个多参数函数转换为一系列单参数函数的过程</strong></em>.</p>
+<p>优点：代码复用，减少代码量，对参数复用功能进行改进，也可进行兼容性的检测。</p>
+<p>如果参数达到length，直接计算结果，如果参数没有达到length，就返回一个函数.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kd">function</span> <span class="nx">sum</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span><span class="nx">b</span><span class="p">,</span><span class="nx">c</span><span class="p">){</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">a</span> <span class="o">+</span> <span class="nx">b</span> <span class="o">+</span> <span class="nx">c</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// curry即为柯里化函数
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">function</span> <span class="nx">curry</span><span class="p">(</span><span class="nx">fn</span><span class="p">){</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="kd">function</span> <span class="nx">curried</span><span class="p">(...</span><span class="nx">args</span><span class="p">){</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span><span class="p">(</span><span class="nx">args</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;=</span> <span class="nx">fn</span><span class="p">.</span><span class="nx">length</span><span class="p">){</span>
+</span></span><span class="line"><span class="cl">            <span class="c1">// 如果参数个数达到length,执行原函数
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>            <span class="k">return</span> <span class="nx">fn</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">args</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span><span class="k">else</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="c1">//如果参数没有达到length,则返回新函数
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>            <span class="k">return</span> <span class="nx">funciton</span> <span class="p">(...</span><span class="nx">args2</span><span class="p">){</span>
+</span></span><span class="line"><span class="cl">                <span class="k">return</span> <span class="nx">curried</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">args</span><span class="p">.</span><span class="nx">concat</span><span class="p">(</span><span class="nx">args2</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">let</span> <span class="nx">_sum</span> <span class="o">=</span> <span class="nx">curry</span><span class="p">(</span><span class="nx">sum</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="kd">let</span> <span class="nx">functionA</span> <span class="o">=</span> <span class="nx">_sum</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="kd">let</span> <span class="nx">functionB</span> <span class="o">=</span> <span class="nx">functionA</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="nx">functionB</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span><span class="c1">//6
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>其他例子</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kd">function</span> <span class="nx">url_curring</span> <span class="p">(</span><span class="nx">protocol</span><span class="p">){</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">hostname</span><span class="p">,</span><span class="nx">pathname</span><span class="p">){</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="sb">`</span><span class="si">${</span><span class="nx">protocol</span><span class="si">}${</span><span class="nx">hostname</span><span class="si">}${</span><span class="nx">pathname</span><span class="si">}</span><span class="sb">`</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">url_https</span> <span class="o">=</span> <span class="nx">url_curring</span><span class="p">(</span><span class="s1">&#39;https://&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">url1</span> <span class="o">=</span> <span class="nx">url_https</span><span class="p">(</span><span class="s1">&#39;www.baidu.com&#39;</span><span class="p">,</span> <span class="s1">&#39;/1&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">url2</span> <span class="o">=</span> <span class="nx">url_https</span><span class="p">(</span><span class="s1">&#39;www.baidu.com&#39;</span><span class="p">,</span> <span class="s1">&#39;/2&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">url3</span> <span class="o">=</span> <span class="nx">url_https</span><span class="p">(</span><span class="s1">&#39;www.baidu.com&#39;</span><span class="p">,</span> <span class="s1">&#39;/3&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">url1</span><span class="p">,</span> <span class="nx">url2</span><span class="p">,</span> <span class="nx">url3</span><span class="p">);</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="nx">实现</span>
+</span></span><span class="line"><span class="cl"><span class="nx">add</span><span class="p">(</span><span class="mi">1</span><span class="p">)(</span><span class="mi">2</span><span class="p">)(</span><span class="mi">3</span><span class="p">)</span> <span class="o">=</span> <span class="mi">6</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="nx">add</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">)(</span><span class="mi">4</span><span class="p">)</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="nx">add</span><span class="p">(</span><span class="mi">1</span><span class="p">)(</span><span class="mi">2</span><span class="p">)(</span><span class="mi">3</span><span class="p">)(</span><span class="mi">4</span><span class="p">)(</span><span class="mi">5</span><span class="p">)</span> <span class="o">=</span> <span class="mi">15</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">function</span> <span class="nx">add</span><span class="p">(...</span><span class="nx">args</span><span class="p">){</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">let</span> <span class="nx">inner</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(...</span><span class="nx">args2</span><span class="p">){</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// ...展开运算符
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="nx">args</span><span class="p">.</span><span class="nx">push</span><span class="p">(...</span><span class="nx">args2</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="kd">let</span> <span class="nx">sum</span> <span class="o">=</span> <span class="nx">args</span><span class="p">.</span><span class="nx">reduce</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">prev</span><span class="p">,</span><span class="nx">cur</span><span class="p">){</span>
+</span></span><span class="line"><span class="cl">            <span class="k">return</span> <span class="nx">prev</span><span class="o">+</span><span class="nx">cur</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">},</span><span class="mi">0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="nx">inner</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="nx">inner</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="15-数组扁平化">1.5 数组扁平化
+</h3><p><em><strong>将一个多维数组递归地扁平化处理为一维数组.</strong></em></p>
+<h4 id="151-递归实现">1.5.1 递归实现
+</h4><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kd">function</span> <span class="nx">flattern</span><span class="p">(</span><span class="nx">arr</span><span class="p">){</span>
+</span></span><span class="line"><span class="cl">    <span class="kr">const</span> <span class="nx">result</span> <span class="o">=</span> <span class="p">[];</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="nx">arr</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="nx">item</span><span class="p">=&gt;{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span><span class="p">(</span><span class="nb">Array</span><span class="p">.</span><span class="nx">isArray</span><span class="p">(</span><span class="nx">item</span><span class="p">)){</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">result</span><span class="p">.</span><span class="nx">push</span><span class="p">(...</span><span class="nx">flattern</span><span class="p">(</span><span class="nx">item</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span><span class="k">else</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">result</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">item</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">})</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="nx">result</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="152-使用reduce">1.5.2 使用reduce
+</h4><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kd">function</span> <span class="nx">flattern</span><span class="p">(</span><span class="nx">arr</span><span class="p">){</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="nx">arr</span><span class="p">.</span><span class="nx">reduce</span><span class="p">((</span><span class="nx">acc</span><span class="p">,</span> <span class="nx">item</span><span class="p">)=&gt;{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="nx">acc</span><span class="p">.</span><span class="nx">concat</span><span class="p">(</span><span class="nb">Array</span><span class="p">.</span><span class="nx">isArray</span><span class="p">(</span><span class="nx">item</span><span class="p">)</span><span class="o">?</span><span class="nx">flattern</span><span class="p">(</span><span class="nx">item</span><span class="p">)</span><span class="o">:</span><span class="nx">item</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="p">},[])</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="16-prototype">1.6 <code>prototype</code>
+</h3><ul>
+<li>
+<p>基本概念：在 JavaScript 里，每个函数都有一个 <code>prototype</code> 属性，这个属性指向一个对象，被称为原型对象。当使用该函数作为构造函数通过 <code>new</code> 关键字创建对象实例时，这些实例会继承原型对象上的属性和方法。</p>
+<ul>
+<li>优点： 1. 节省内存，像共享资源节省成本，而不是每个实例都复制一份，这样可以大大节省内存空间 2. 方便代码复用。</li>
+<li>缺点：1.当 <code>prototype</code> 链很长或者嵌套复杂时，代码可读性降低，容易造成继承混淆 2.原型属性的修改影响广泛，改了一个影响全部。</li>
+</ul>
+</li>
+</ul>
+<h3 id="17-symbol">1.7 Symbol
+</h3><h4 id="171-基本概念">1.7.1 基本概念
+</h4><p>symbol是ES6引入的一种新数据类型，表示独一无二的值，算基础类型。主要作用是<em><strong>创建对象的唯一属性名，以避免属性名冲突</strong></em>。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">sym1</span> <span class="o">=</span> <span class="nx">Symbol</span><span class="p">(</span><span class="s1">&#39;description&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">sym2</span> <span class="o">=</span> <span class="nx">Symbol</span><span class="p">(</span><span class="s1">&#39;description&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">sym1</span><span class="o">===</span><span class="nx">sym2</span><span class="p">);</span> <span class="c1">// false
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="172-symbol作为对象的属性键">1.7.2 Symbol作为对象的属性键
+</h4><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">sym</span> <span class="o">=</span> <span class="nx">Symbol</span><span class="p">(</span><span class="s1">&#39;myKey&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">obj</span> <span class="o">=</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="p">[</span><span class="nx">sym</span><span class="p">]</span><span class="o">:</span> <span class="s1">&#39;value&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">obj</span><span class="p">[</span><span class="nx">sym</span><span class="p">]);</span><span class="c1">// &#39;value&#39;
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">obj</span><span class="p">[</span><span class="s1">&#39;myKey&#39;</span><span class="p">]);</span><span class="c1">// undefined
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="173-symbol的隐藏属性">1.7.3 Symbol的隐藏属性
+</h4><p>Symbol属性不会出现在常规的对象属性遍历操作中，如for in、Object.keys()，它可以用来定义一些隐藏的或者内部的属性，防止外部不小心修改。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">sym</span> <span class="o">=</span> <span class="nx">Symbol</span><span class="p">(</span><span class="s1">&#39;hiddenProperty&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">obj</span> <span class="o">=</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="p">[</span><span class="nx">sym</span><span class="p">]</span><span class="o">:</span> <span class="s1">&#39;secret&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">normalProp</span><span class="o">:</span> <span class="s1">&#39;visible&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">obj</span><span class="p">));</span><span class="c1">// [&#39;normalProp&#39;]
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nb">Object</span><span class="p">.</span><span class="nx">getOwnPropertyNames</span><span class="p">(</span><span class="nx">obj</span><span class="p">));</span><span class="c1">// [&#39;normalProp&#39;]
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nb">Object</span><span class="p">.</span><span class="nx">getOwnPropertySymbols</span><span class="p">(</span><span class="nx">obj</span><span class="p">));</span><span class="c1">// [Symbol(hiddenproperty)]
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="174-全局symbol">1.7.4 全局Symbol
+</h4><p>有时候希望在不同模块内共享同一个Symbol，可使用Symbol.for</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">sym1</span> <span class="o">=</span> <span class="nx">Symbol</span><span class="p">.</span><span class="k">for</span><span class="p">(</span><span class="s1">&#39;sharedSymbol&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="nx">cosnt</span> <span class="nx">sym2</span> <span class="o">=</span> <span class="nx">Symbol</span><span class="p">.</span><span class="k">for</span><span class="p">(</span><span class="s1">&#39;sharedSymbol&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">sym1</span> <span class="o">===</span> <span class="nx">sym2</span><span class="p">);</span><span class="c1">//true
+</span></span></span><span class="line"><span class="cl"><span class="c1">// Symbol.for()不同于Symbol(),前者会检查全局Symbol注册表，而后者每次都会创建新的Symbol
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="18-promise">1.8 promise
+</h3><p>处理100个并发请求问题</p>
+<h3 id="19-防抖节流">1.9 防抖/节流
+</h3><h3 id="场景">场景
+</h3><h3 id="21-js超过number最大值的数怎么处理">2.1 js超过Number最大值的数怎么处理
+</h3><p>JavaScript里的Number表示的安全整数范围是 <code>-(2^53 - 1)</code> 到 <code>2^53 - 1</code>，超出的话可能会出现精度丢失问题。<code>Number.MIN_SAFE_INTEGER</code> 和 <code>Number.MAX_SAFE_INTEGER</code></p>
+<ul>
+<li><code>BigInt</code> 内置的全局函数 只支持整数</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">bigNum</span> <span class="o">=</span> <span class="nx">BigInt</span><span class="p">(</span><span class="s1">&#39;124323131232231232312323232123&#39;</span><span class="p">);</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li><code>decimal.js</code> 用于任意精度十进制算术的 JavaScript 库 可整数可小数</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">decimal</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Decimal</span><span class="p">(</span><span class="s2">&#34;1e+308&#34;</span><span class="p">);</span> <span class="c1">// 科学计数法 表示1后面跟着308个0
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>
+<p><code>big.js</code> 可整数可小数</p>
+</li>
+<li>
+<p>格式化成用户好读的格式，比如1亿</p>
+</li>
+<li>
+<p>表单校验，不允许用户输入超过多少位的数字</p>
+</li>
+</ul>
+<h3 id="22-如何解决页面请求接口大规模并发问题">2.2 如何解决页面请求接口大规模并发问题
+</h3><p><strong>滑动窗口</strong>：算法，专门来控制流量的。</p>
+<p><strong>背景</strong>：数据采集平台，低代码编辑平台，有序稳定发送到后端。</p>
+<p><strong>方案</strong>：</p>
+<ul>
+<li>
+<p>请求队列</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kr">class</span> <span class="nx">RequestQueue</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">constructor</span><span class="p">(</span><span class="nx">maxConcurrent</span><span class="p">){</span>
+</span></span><span class="line"><span class="cl">        <span class="k">this</span><span class="p">.</span><span class="nx">maxConcurrent</span> <span class="o">=</span> <span class="nx">maxConcurrent</span><span class="p">;</span> <span class="c1">// 最大并发请求数
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="k">this</span><span class="p">.</span><span class="nx">currentConcurrent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="c1">// 当前并发请求数
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="k">this</span><span class="p">.</span><span class="nx">queue</span> <span class="o">=</span> <span class="p">[];</span> <span class="c1">//请求队列
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1">// 加入队列 处理队列里的事情
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="nx">add</span><span class="p">(</span><span class="nx">request</span><span class="p">){</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="k">new</span> <span class="nb">Promise</span><span class="p">((</span><span class="nx">resolve</span><span class="p">,</span> <span class="nx">reject</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="k">this</span><span class="p">.</span><span class="nx">queue</span><span class="p">.</span><span class="nx">push</span><span class="p">({</span><span class="nx">request</span><span class="p">,</span> <span class="nx">resolve</span><span class="p">,</span> <span class="nx">reject</span><span class="p">});</span>
+</span></span><span class="line"><span class="cl">            <span class="k">this</span><span class="p">.</span><span class="nx">processQueue</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">        <span class="p">})</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="nx">processQueue</span><span class="p">(){</span>	
+</span></span><span class="line"><span class="cl">        <span class="k">if</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">queue</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="k">this</span><span class="p">.</span><span class="nx">currentCouncurrent</span> <span class="o">&lt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">maxConcurrent</span><span class="p">){</span>
+</span></span><span class="line"><span class="cl">            <span class="kr">const</span> <span class="p">{</span><span class="nx">request</span><span class="p">,</span> <span class="nx">resolve</span><span class="p">,</span> <span class="nx">reject</span><span class="p">}</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">queue</span><span class="p">.</span><span class="nx">shift</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">            <span class="k">this</span><span class="p">.</span><span class="nx">currentConcurrent</span><span class="o">++</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">request</span><span class="p">().</span><span class="nx">then</span><span class="p">(</span><span class="nx">resolve</span><span class="p">).</span><span class="k">catch</span><span class="p">(</span><span class="nx">reject</span><span class="p">).</span><span class="k">finally</span><span class="p">(()=&gt;{</span>
+</span></span><span class="line"><span class="cl">                <span class="k">this</span><span class="p">.</span><span class="nx">currentConcurrent</span><span class="o">--</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">                <span class="k">this</span><span class="p">.</span><span class="nx">processQueue</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">            <span class="p">})</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">function</span> <span class="nx">fetchData</span><span class="p">(</span><span class="nx">url</span><span class="p">){</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="nx">fetch</span><span class="p">(</span><span class="nx">url</span><span class="p">).</span><span class="nx">then</span><span class="p">(</span><span class="nx">response</span><span class="p">=&gt;</span><span class="nx">response</span><span class="p">.</span><span class="nx">json</span><span class="p">());</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// 使用请求队列
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kr">const</span> <span class="nx">requestQueue</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">RequestQueue</span><span class="p">(</span><span class="mi">5</span><span class="p">);</span> <span class="c1">// 设定最大并发请求数为5
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">url</span> <span class="o">=</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">    <span class="s1">&#39;https://api.example.com/data1&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="s1">&#39;https://api.example.com/data2&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// ...
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">requests</span> <span class="o">=</span> <span class="nx">urls</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">url</span><span class="p">=&gt;{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="p">()=&gt;{</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">fetchData</span><span class="p">(</span><span class="nx">url</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">});</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nb">Promise</span><span class="p">.</span><span class="nx">all</span><span class="p">(</span><span class="nx">requests</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">request</span><span class="p">=&gt;</span><span class="nx">requestQueue</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">request</span><span class="p">)))</span>
+</span></span><span class="line"><span class="cl">	<span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">requests</span><span class="p">=&gt;{</span>
+</span></span><span class="line"><span class="cl">     	<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;所有请求已完成&#39;</span><span class="p">,</span> <span class="nx">requests</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="p">})</span>
+</span></span><span class="line"><span class="cl">	<span class="p">.</span><span class="k">catch</span><span class="p">(</span><span class="nx">error</span><span class="p">=&gt;{</span>
+</span></span><span class="line"><span class="cl">    	<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;请求失败&#39;</span><span class="p">,</span> <span class="nx">error</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="p">});</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div></li>
+<li>
+<p>防抖(debounce)/节流(throttle)</p>
+<ul>
+<li>防抖：指定时间内只执行一次。常用输入搜索框。</li>
+<li>节流：指定时间间隔内函数执行一次。常用窗口的resize、scroll事件。</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kd">function</span> <span class="nx">debounce</span><span class="p">(</span><span class="nx">func</span><span class="p">,</span> <span class="nx">wait</span><span class="p">){</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">let</span> <span class="nx">timeout</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="kd">function</span><span class="p">(...</span><span class="nx">args</span><span class="p">){</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">clearTImeout</span><span class="p">(</span><span class="nx">timeout</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">timeout</span> <span class="o">=</span> <span class="nx">setTimeout</span><span class="p">(()=&gt;{</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">func</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="k">this</span><span class="p">,</span><span class="nx">args</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="p">},</span> <span class="nx">wait</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// 使用防抖
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kr">const</span> <span class="nx">debouncedFetchData</span> <span class="o">=</span> <span class="nx">debounce</span><span class="p">((</span><span class="nx">query</span><span class="p">)=&gt;{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">fetchData</span><span class="p">(</span><span class="sb">`/api/search?q=</span><span class="si">${</span><span class="nx">query</span><span class="si">}</span><span class="sb">`</span><span class="p">).</span><span class="nx">then</span><span class="p">(</span><span class="nx">data</span><span class="p">=&gt;{</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="p">});</span>
+</span></span><span class="line"><span class="cl"><span class="p">},</span> <span class="mi">300</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// 输入框事件监听
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">&#39;search-input&#39;</span><span class="p">).</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s1">&#39;input&#39;</span><span class="p">,(</span><span class="nx">event</span><span class="p">)=&gt;{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">debouncedFetchData</span><span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">target</span><span class="p">.</span><span class="nx">value</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">});</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kd">function</span> <span class="nx">throttle</span><span class="p">(</span><span class="nx">func</span><span class="p">,</span><span class="nx">limit</span><span class="p">){</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">let</span> <span class="nx">inThrottle</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="nx">funtion</span><span class="p">(...</span><span class="nx">args</span><span class="p">){</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="nx">inThrottle</span><span class="p">){</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">func</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">args</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">inThrottle</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">setTimeout</span><span class="p">(()=&gt;</span><span class="nx">inThrottle</span> <span class="o">=</span> <span class="kc">false</span><span class="p">,</span> <span class="nx">limit</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// 使用节流函数
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kr">const</span> <span class="nx">throttledFetchData</span> <span class="o">=</span> <span class="nx">throttle</span><span class="p">(()=&gt;{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">fetchData</span><span class="p">(</span><span class="sb">`/api/search?q=</span><span class="si">${</span><span class="nx">query</span><span class="si">}</span><span class="sb">`</span><span class="p">).</span><span class="nx">then</span><span class="p">(</span><span class="nx">data</span><span class="p">=&gt;{</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="p">});</span>
+</span></span><span class="line"><span class="cl"><span class="p">},</span> <span class="mi">1000</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">//窗口滚动事件监听
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nb">window</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s1">&#39;scroll&#39;</span><span class="p">,</span> <span class="nx">throttledFetchData</span><span class="p">);</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div></li>
+<li>
+<p>分页加载</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kd">let</span> <span class="nx">currentPage</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">pageSize</span> <span class="o">=</span> <span class="mi">20</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="kd">let</span> <span class="nx">isLoading</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">function</span> <span class="nx">loadMoreData</span><span class="p">(){</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span><span class="p">(</span><span class="nx">isLoading</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">isLoading</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="nx">fetch</span><span class="p">(</span><span class="sb">`/api/items?page=</span><span class="si">${</span><span class="nx">currentPage</span><span class="si">}</span><span class="sb">&amp;size=</span><span class="si">${</span><span class="nx">pageSize</span><span class="si">}</span><span class="sb">`</span><span class="p">).</span><span class="nx">then</span><span class="p">(</span><span class="nx">response</span><span class="p">=&gt;</span><span class="nx">response</span><span class="p">.</span><span class="nx">json</span><span class="p">()).</span><span class="nx">then</span><span class="p">(</span><span class="nx">data</span><span class="p">=&gt;{</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">//处理数据并且更新页面
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kr">const</span> <span class="nx">container</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">&#39;item-container&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">data</span><span class="p">.</span><span class="nx">items</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="nx">item</span><span class="p">=&gt;{</span>
+</span></span><span class="line"><span class="cl">            <span class="kr">const</span> <span class="nx">itemElement</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">createElement</span><span class="p">(</span><span class="s1">&#39;div&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">itemElement</span><span class="p">.</span><span class="nx">textContent</span> <span class="o">=</span> <span class="nx">item</span><span class="p">.</span><span class="nx">name</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">container</span><span class="p">.</span><span class="nx">appendChild</span><span class="p">(</span><span class="nx">itemElement</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="p">});</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">currentPage</span><span class="o">++</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">isLoading</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">})</span>
+</span></span><span class="line"><span class="cl">    <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">error</span><span class="p">=&gt;{</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;加载数据失败&#39;</span><span class="err">，</span><span class="nx">error</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">isLoading</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">})</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">//监听滚动事件
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nb">window</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s1">&#39;scroll&#39;</span><span class="p">,()=&gt;{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span><span class="p">(</span><span class="nb">window</span><span class="p">.</span><span class="nx">innerHeight</span><span class="o">+</span><span class="nb">window</span><span class="p">.</span><span class="nx">scrollY</span><span class="o">&gt;=</span><span class="nb">document</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">offsetHeight</span><span class="p">){</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">loadMoreData</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">});</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">//初始化加载
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">loadMoreData</span><span class="p">();</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div></li>
+</ul>
+<ul>
+<li>落地、反思
+<ul>
+<li>大数据量请求场景下，选用了请求队列，封装请求队列</li>
+<li>防抖节流，用户交互层面上去解决减少请求的处理 lodash源码</li>
+<li>分页、滚动加载，可视区绘制</li>
+</ul>
+</li>
+</ul>
+<h3 id="23-请说说大文件上传">2.3 请说说大文件上传
+</h3><p>涉及用户自定模型<code>1G</code>以上</p>
+<p>遇到的问题：</p>
+<pre><code>+  网络断开，之前传的没了
++  传着传着，网络波动没了
++  关机了，想接着传，做不到
+</code></pre>
+<p>专业术语：断点续传、断开重连重传、切片上传</p>
+<p><strong>方案</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="mf">1.</span><span class="nx">前端切片</span> <span class="nx">chunk</span> <span class="mi">1024</span><span class="nx">M</span><span class="p">(</span><span class="mi">1048576</span><span class="nx">KB</span><span class="p">),</span> <span class="mi">500</span><span class="nx">K</span><span class="p">,</span> <span class="kr">const</span> <span class="nx">size</span> <span class="o">=</span> <span class="mi">1048576</span><span class="o">/</span><span class="mi">500</span><span class="p">;</span><span class="c1">// 切片的数量
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="mf">2.</span><span class="nx">将切片传递给后端</span><span class="err">，</span><span class="nx">切的片要取名</span><span class="err">：</span><span class="nx">hash</span><span class="p">,</span><span class="nx">index</span>
+</span></span><span class="line"><span class="cl"><span class="mf">3.</span><span class="nx">后端组合切片</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nx">前端切片</span><span class="err">：</span>
+</span></span><span class="line"><span class="cl"><span class="mf">1.</span><span class="nx">主进程卡顿</span><span class="err">，</span><span class="nx">webWorker多线程切片</span><span class="err">，</span><span class="nx">处理完后交给主进程发送</span>
+</span></span><span class="line"><span class="cl"><span class="mf">2.</span><span class="nx">切完之后</span><span class="err">，</span><span class="nx">将blob存储到IndexedDB</span><span class="err">，</span><span class="nx">下次用户进来之后</span><span class="err">，</span><span class="nx">查询是否存在未完成上传的切片</span><span class="err">，</span><span class="nx">有就继续上传</span>
+</span></span><span class="line"><span class="cl"><span class="mf">3.</span><span class="nx">websocket</span><span class="err">，</span><span class="nx">实时通知和请求序列的控制</span> <span class="nx">wss</span><span class="err">（</span><span class="nx">额外</span><span class="err">）</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nx">整体设计</span><span class="err">：</span>
+</span></span><span class="line"><span class="cl"><span class="mf">1.</span><span class="nx">组件设计</span>
+</span></span><span class="line"><span class="cl"><span class="mf">2.</span><span class="nx">props</span><span class="err">、</span><span class="nx">事件</span><span class="err">、</span><span class="nx">状态</span>
+</span></span><span class="line"><span class="cl"><span class="mf">3.</span><span class="nx">拖拽上传</span><span class="err">、</span><span class="nx">多文件选择</span>
+</span></span><span class="line"><span class="cl"><span class="mf">4.</span><span class="nx">通用化不同文件的上传</span><span class="err">，</span><span class="nx">上传统一协议</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span><span class="lnt">62
+</span><span class="lnt">63
+</span><span class="lnt">64
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="line"><span class="cl"><span class="cp">&lt;!DOCTYPE html&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">html</span> <span class="na">lang</span><span class="o">=</span><span class="s">&#34;en&#34;</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">  <span class="p">&lt;</span><span class="nt">head</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">meta</span> <span class="na">charset</span><span class="o">=</span><span class="s">&#34;UTF-8&#34;</span> <span class="p">/&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">meta</span> <span class="na">name</span><span class="o">=</span><span class="s">&#34;viewport&#34;</span> <span class="na">content</span><span class="o">=</span><span class="s">&#34;width=device-width, initial-scale=1.0&#34;</span> <span class="p">/&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">title</span><span class="p">&gt;</span>Document<span class="p">&lt;/</span><span class="nt">title</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">  <span class="p">&lt;/</span><span class="nt">head</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">  <span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">input</span> <span class="na">type</span><span class="o">=</span><span class="s">&#34;file&#34;</span> <span class="na">id</span><span class="o">=</span><span class="s">&#34;fileInput&#34;</span> <span class="p">/&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">button</span> <span class="na">onclick</span><span class="o">=</span><span class="s">&#34;uploadFile()&#34;</span><span class="p">&gt;</span>Upload<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">script</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">      <span class="kr">const</span> <span class="nx">CHUNK_SIZE</span> <span class="o">=</span> <span class="mi">5</span> <span class="o">*</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span><span class="p">;</span> <span class="c1">// 每块大小为5MB
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">      <span class="kd">function</span> <span class="nx">uploadFile</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="kr">const</span> <span class="nx">file</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">&#39;fileInput&#39;</span><span class="p">).</span><span class="nx">files</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">file</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">          <span class="c1">// eslint-disable-next-line no-alert
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>          <span class="nx">alert</span><span class="p">(</span><span class="s1">&#39;请选择文件&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">          <span class="k">return</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="kr">const</span> <span class="nx">totalChunks</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">ceil</span><span class="p">(</span><span class="nx">file</span><span class="p">.</span><span class="nx">size</span> <span class="o">/</span> <span class="nx">CHUNK_SIZE</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="kd">let</span> <span class="nx">currentChunk</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1">// 放入webWorker
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kd">function</span> <span class="nx">uploadChunk</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">          <span class="k">if</span> <span class="p">(</span><span class="nx">currentChunk</span> <span class="o">&gt;=</span> <span class="nx">totalChunks</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;上传完成&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">            <span class="k">return</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">          <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">          <span class="kr">const</span> <span class="nx">start</span> <span class="o">=</span> <span class="nx">currentChunk</span> <span class="o">*</span> <span class="nx">CHUNK_SIZE</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">          <span class="kr">const</span> <span class="nx">end</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">min</span><span class="p">(</span><span class="nx">start</span> <span class="o">+</span> <span class="nx">CHUNK_SIZE</span><span class="p">,</span> <span class="nx">file</span><span class="p">.</span><span class="nx">size</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">          <span class="kr">const</span> <span class="nx">chunk</span> <span class="o">=</span> <span class="nx">file</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="nx">start</span><span class="p">,</span> <span class="nx">end</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">          <span class="kr">const</span> <span class="nx">formData</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">FormData</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">          <span class="nx">formData</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span><span class="s1">&#39;file&#39;</span><span class="p">,</span> <span class="nx">chunk</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">          <span class="nx">formData</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span><span class="s1">&#39;chunkNumber&#39;</span><span class="p">,</span> <span class="nx">currentChunk</span> <span class="o">+</span> <span class="mi">1</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">          <span class="nx">formData</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span><span class="s1">&#39;totalChunks&#39;</span><span class="p">,</span> <span class="nx">totalChunks</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">          <span class="nx">fetch</span><span class="p">(</span><span class="s1">&#39;/upload&#39;</span><span class="p">,</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">method</span><span class="o">:</span> <span class="s1">&#39;POST&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">body</span><span class="o">:</span> <span class="nx">formData</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">          <span class="p">})</span>
+</span></span><span class="line"><span class="cl">            <span class="p">.</span><span class="nx">then</span><span class="p">((</span><span class="nx">response</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">              <span class="k">if</span> <span class="p">(</span><span class="nx">response</span><span class="p">.</span><span class="nx">ok</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="nx">currentChunk</span><span class="o">++</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">                <span class="nx">uploadChunk</span><span class="p">();</span> <span class="c1">// 递归调用上传下一块
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>              <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s1">&#39;上传失败&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">              <span class="p">}</span>
+</span></span><span class="line"><span class="cl">            <span class="p">})</span>
+</span></span><span class="line"><span class="cl">            <span class="p">.</span><span class="k">catch</span><span class="p">((</span><span class="nx">error</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">              <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s1">&#39;上传失败&#39;</span><span class="p">,</span> <span class="nx">error</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">            <span class="p">});</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="nx">uploadChunk</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">      <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">  <span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="24-在前端怎么实现页面截图">2.4 在前端怎么实现页面截图
+</h3><p><strong>背景</strong>：</p>
+<ul>
+<li>文档，导出内容png</li>
+<li>内容导出为png</li>
+<li>设计类软件，出图</li>
+</ul>
+<p><strong>方案</strong>：</p>
+<ul>
+<li>canvas</li>
+<li>puppeteer（无头【headless】浏览器）：解决响应式问题的截图</li>
+<li>html2canvas(canvas) =&gt; 上传CDN</li>
+</ul>
+<p><strong>落地</strong>：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="line"><span class="cl">1.封装截图工具，考虑通用性（全页面截图|局部截图|特定区域截图）body/header/dom
+</span></span><span class="line"><span class="cl">2.设计具体协议（函数式、组件式）：隐藏canvas
+</span></span><span class="line"><span class="cl">3.核心代码
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">{
+</span></span><span class="line"><span class="cl">	&#34;dependencies&#34;:{
+</span></span><span class="line"><span class="cl">		&#34;html2canvas&#34;: &#34;1.4.1&#34;
+</span></span><span class="line"><span class="cl">	}
+</span></span><span class="line"><span class="cl">}
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="cp">&lt;!DOCTYPE html&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">html</span> <span class="na">lang</span><span class="o">=</span><span class="s">&#34;en&#34;</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">  <span class="p">&lt;</span><span class="nt">head</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">meta</span> <span class="na">charset</span><span class="o">=</span><span class="s">&#34;UTF-8&#34;</span> <span class="p">/&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">meta</span> <span class="na">name</span><span class="o">=</span><span class="s">&#34;viewport&#34;</span> <span class="na">content</span><span class="o">=</span><span class="s">&#34;width=device-width, initial-scale=1.0&#34;</span> <span class="p">/&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">title</span><span class="p">&gt;</span>Document<span class="p">&lt;/</span><span class="nt">title</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">script</span> <span class="na">src</span><span class="o">=</span><span class="s">&#34;https://cdn.jsdeliver.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js&#34;</span><span class="p">&gt;&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">  <span class="p">&lt;/</span><span class="nt">head</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">  <span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">div</span> <span class="na">id</span><span class="o">=</span><span class="s">&#34;screenshot-target&#34;</span> <span class="na">style</span><span class="o">=</span><span class="s">&#34;padding: 20px; background: #f5f5f5&#34;</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">      <span class="p">&lt;</span><span class="nt">h1</span><span class="p">&gt;</span>Hello, World!<span class="p">&lt;/</span><span class="nt">h1</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">      <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>THis is the content to capture.<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">button</span> <span class="na">onclick</span><span class="o">=</span><span class="s">&#34;takeScreenshot()&#34;</span><span class="p">&gt;</span>截图<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">script</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">      <span class="kd">function</span> <span class="nx">takeScreenshot</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="kr">const</span> <span class="nx">element</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">&#39;screenshot-target&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="nx">html2canvas</span><span class="p">(</span><span class="nx">element</span><span class="p">).</span><span class="nx">then</span><span class="p">((</span><span class="nx">canvas</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">          <span class="kr">const</span> <span class="nx">img</span> <span class="o">=</span> <span class="nx">canvas</span><span class="p">.</span><span class="nx">toDataURL</span><span class="p">(</span><span class="s1">&#39;image/png&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">          <span class="kr">const</span> <span class="nx">link</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">createElement</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">          <span class="nx">link</span><span class="p">.</span><span class="nx">href</span> <span class="o">=</span> <span class="nx">img</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">          <span class="nx">link</span><span class="p">.</span><span class="nx">download</span> <span class="o">=</span> <span class="s1">&#39;screenshot.png&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">          <span class="nx">link</span><span class="p">.</span><span class="nx">click</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">        <span class="p">});</span>
+</span></span><span class="line"><span class="cl">      <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">  <span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="25-移动端适配问题如何解决">2.5 移动端适配问题如何解决
+</h3><p><strong>背景</strong>：
+项目想支持PC、移动端</p>
+<p><strong>方案</strong>：</p>
+<ul>
+<li>根据不同端来开发不同页面（成本高）</li>
+<li>根据不同端加载不同的css样式</li>
+<li>根据响应式，来运行不同的样式规则（常用）</li>
+<li>style预处理器来做</li>
+</ul>
+<p>考虑的问题：</p>
+<p>1.设置视窗，通过元信息配置meta</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">meta</span> <span class="na">name</span><span class="o">=</span><span class="s">&#34;viewport&#34;</span> <span class="na">content</span><span class="o">=</span><span class="s">&#34;width=device-width,initial-scale=1.0&#34;</span><span class="p">&gt;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>2.掌握媒体查询</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-css" data-lang="css"><span class="line"><span class="cl"><span class="nt">body</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">font-size</span><span class="p">:</span> <span class="mi">16</span><span class="kt">px</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="o">//</span> <span class="nt">当尺寸大于xxx小于xxx时</span><span class="err">，</span><span class="nt">需要什么样式</span>
+</span></span><span class="line"><span class="cl"><span class="p">@</span><span class="k">media</span><span class="o">(</span><span class="nt">min-width</span><span class="o">:</span> <span class="nt">780px</span><span class="o">)</span> <span class="nt">and</span> <span class="o">(</span><span class="nt">max-width</span><span class="o">:</span> <span class="nt">1024px</span><span class="o">)</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">body</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">font-size</span><span class="p">:</span><span class="mi">18</span><span class="kt">px</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>3.弹性布局 flex布局</p>
+<ul>
+<li>主轴方向：flex-direction</li>
+<li>对齐方式：justify-content、align-items</li>
+<li>弹性属性：flex</li>
+</ul>
+<p>4.图片响应式 picture/source标签</p>
+<p>5.<code>rem</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-css" data-lang="css"><span class="line"><span class="cl"><span class="nt">rem单位的基础值由html的font-size决定</span>
+</span></span><span class="line"><span class="cl"><span class="nt">em单位</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nt">html</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">font-size</span><span class="p">:</span><span class="mi">16</span><span class="kt">px</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="o">//</span> <span class="nt">当尺寸大于xxx小于xxx时</span><span class="err">，</span><span class="nt">需要什么样式</span>
+</span></span><span class="line"><span class="cl"><span class="p">@</span><span class="k">media</span><span class="o">(</span><span class="nt">min-width</span><span class="o">:</span> <span class="nt">780px</span><span class="o">)</span> <span class="nt">and</span> <span class="o">(</span><span class="nt">max-width</span><span class="o">:</span> <span class="nt">1024px</span><span class="o">)</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">body</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">font-size</span><span class="p">:</span><span class="mi">18</span><span class="kt">px</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="p">.</span><span class="nc">header</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">font-size</span><span class="p">:</span><span class="mi">1</span><span class="kt">rem</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="p">.</span><span class="nc">header_title</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">fonst-size</span><span class="p">:</span><span class="mf">0.8</span><span class="kt">em</span><span class="p">;</span> 
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="26-如何修改第三方npm包">2.6 如何修改第三方npm包
+</h3><p>稳定库，直接扒下来，node_modules, 直接修改</p>
+<p>patch 方法</p>
+<p>fork package，自己维护</p>
+<p><strong>背景</strong>：</p>
+<p>来自于设计、产品</p>
+<p><strong>方案</strong>：</p>
+<ul>
+<li>
+<p>稳定库，node_modules 直接改</p>
+</li>
+<li>
+<p>patch 方案 （短期简单的npm包可以做）</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="nx">npm</span> <span class="nx">i</span> <span class="nx">patch</span><span class="o">-</span><span class="kr">package</span> <span class="nx">postinstall</span>
+</span></span><span class="line"><span class="cl"><span class="nx">npm的钩子</span> <span class="mf">1.</span><span class="nx">prepare</span> <span class="mf">2.</span><span class="nx">postinstall</span> <span class="mf">3.</span><span class="nx">publish等</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;scripts&#34;</span><span class="o">:</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;postinstall&#34;</span><span class="o">:</span> <span class="s2">&#34;patch-package&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nx">创建补丁</span>
+</span></span><span class="line"><span class="cl"><span class="nx">npx</span> <span class="nx">patch</span><span class="o">-</span><span class="kr">package</span> <span class="nx">rspack</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nx">这时候会在项目生成</span><span class="sb">`patches/rspack+1.0.0.patch`</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div></li>
+<li>
+<p>fork（github fork）</p>
+<pre><code>  - 直接改源码，源码改完后，构建，发布到npm私服（verdaccio）
+</code></pre>
+<h3 id="27-当qps达到峰值时该如何处理">2.7 当QPS达到峰值时，该如何处理
+</h3></li>
+</ul>
+<p>当前端应用的QPS(每秒查询次数)达到峰值时，会对服务器和应用造成很大的压力，甚至可能导致系统崩溃。为了解决这个问题，需要优化和管理高并发请求。</p>
+<p><strong>方案</strong>：</p>
+<pre><code>- 请求限流（全栈，后端处理）redis检查频率 请求太多抛出异常
+</code></pre>
+<ul>
+<li>
+<p>请求合并</p>
+<ul>
+<li>短时间内的请求进行合并，以此降低服务端压力
+<ul>
+<li>防抖：一段时间内只进行一次请求</li>
+<li>节流：一个时间间隔内进行一次请求</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>请求缓存</p>
+<ul>
+<li>swr里面针对于请求的内容缓存</li>
+<li>请求参数、请求方法、请求逻辑依赖的内容没有发生变化，直接命中缓存。</li>
+</ul>
+</li>
+<li>
+<p>任务队列</p>
+<ul>
+<li>滑动窗口，限定最大并发数</li>
+</ul>
+</li>
+</ul>
+<h3 id="28-如何实现网页加载进度条">2.8 如何实现网页加载进度条
+</h3><p>拿到进度、绘制进度（dom、svg）</p>
+<p><strong>背景</strong>：
+为了提升用户加载等待的体验，考虑使用加载进度条反馈给用户加载过程。</p>
+<p><strong>方案</strong>：</p>
+<ul>
+<li>
+<p>监听页面加载事件，来控制进度条绘制</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="o">&lt;!</span><span class="nx">DOCTYPE</span> <span class="nx">html</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="o">&lt;</span><span class="nx">html</span> <span class="nx">lang</span><span class="o">=</span><span class="s2">&#34;en&#34;</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">  <span class="o">&lt;</span><span class="nx">head</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="o">&lt;</span><span class="nx">meta</span> <span class="nx">charset</span><span class="o">=</span><span class="s2">&#34;UTF-8&#34;</span> <span class="o">/&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="o">&lt;</span><span class="nx">meta</span> <span class="nx">name</span><span class="o">=</span><span class="s2">&#34;viewport&#34;</span> <span class="nx">content</span><span class="o">=</span><span class="s2">&#34;width=device-width, initial-scale=1.0&#34;</span> <span class="o">/&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="o">&lt;</span><span class="nx">title</span><span class="o">&gt;</span><span class="nx">Document</span><span class="o">&lt;</span><span class="err">/title&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="o">&lt;</span><span class="nx">style</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">      <span class="err">#</span><span class="nx">progress</span><span class="o">-</span><span class="nx">bar</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">position</span><span class="o">:</span> <span class="nx">fixed</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">top</span><span class="o">:</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">left</span><span class="o">:</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">width</span><span class="o">:</span> <span class="mi">100</span><span class="o">%</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">height</span><span class="o">:</span> <span class="mi">4</span><span class="nx">px</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">background</span><span class="o">-</span><span class="nx">color</span><span class="o">:</span> <span class="err">#</span><span class="mi">29</span><span class="nx">d</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">z</span><span class="o">-</span><span class="nx">index</span><span class="o">:</span> <span class="mi">9999</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">transition</span><span class="o">:</span> <span class="nx">width</span> <span class="mf">0.4</span><span class="nx">s</span> <span class="nx">ease</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">      <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="o">&lt;</span><span class="err">/style&gt;</span>
+</span></span><span class="line"><span class="cl">  <span class="o">&lt;</span><span class="err">/head&gt;</span>
+</span></span><span class="line"><span class="cl">  <span class="o">&lt;</span><span class="nx">body</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="o">&lt;</span><span class="nx">div</span> <span class="nx">id</span><span class="o">=</span><span class="s2">&#34;progress-bar&#34;</span><span class="o">&gt;&lt;</span><span class="err">/div&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="o">&lt;</span><span class="nx">script</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">      <span class="kd">function</span> <span class="nx">simulateLoadingProgress</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="kr">const</span> <span class="nx">progressBar</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">&#39;progress-bar&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="kd">let</span> <span class="nx">width</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="kr">const</span> <span class="nx">interval</span> <span class="o">=</span> <span class="nx">setInterval</span><span class="p">(()</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">          <span class="k">if</span> <span class="p">(</span><span class="nx">width</span> <span class="o">&gt;=</span> <span class="mi">100</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">clearInterval</span><span class="p">(</span><span class="nx">interval</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">progressBar</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">width</span> <span class="o">=</span> <span class="s1">&#39;100%&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">setTimeout</span><span class="p">(()</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">              <span class="nx">progressBar</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">display</span> <span class="o">=</span> <span class="s1">&#39;none&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="p">},</span> <span class="mi">3000</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">          <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">width</span> <span class="o">+=</span> <span class="mi">5</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">progressBar</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">width</span> <span class="o">=</span> <span class="sb">`</span><span class="si">${</span><span class="nx">width</span><span class="si">}</span><span class="sb">%`</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">          <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="p">},</span> <span class="mi">1000</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">      <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">      <span class="nb">window</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s1">&#39;load&#39;</span><span class="p">,</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">simulateLoadingProgress</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">      <span class="p">});</span>
+</span></span><span class="line"><span class="cl">    <span class="o">&lt;</span><span class="err">/script&gt;</span>
+</span></span><span class="line"><span class="cl">  <span class="o">&lt;</span><span class="err">/body&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="o">&lt;</span><span class="err">/html&gt;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div></li>
+<li>
+<p>Ajax拿到进度，svg/dom绘制进度</p>
+</li>
+</ul>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+     
+    
+        
+    <div class="disqus-container">
+    <div id="disqus_thread"></div>
+<script>
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "hugo-theme-stack" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+
+<style>
+    .disqus-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+</style>
+
+<script>
+    window.addEventListener('onColorSchemeChange', (e) => {
+        if (typeof DISQUS == 'object') {
+            DISQUS.reset({
+                reload: true
+            });
+        }
+    })
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+            2024 - 
+        
+        2025 dundun
+    </section>
+    
+    <section class="powerby">
+        使用 <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> 构建 <br />
+        主题 <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.30.0">Stack</a></b> 由 <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a> 设计
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.810512e4121ba9492e4cbde89645ee95abcef2e8822fd26835e322f11dcb6d5a.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>
