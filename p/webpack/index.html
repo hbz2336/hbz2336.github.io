@@ -331,13 +331,21 @@
     </li>
     <li><a href="#6处理js资源">6.处理js资源</a>
       <ol>
-        <li><a href="#61-eslint">6.1 eslint</a>
+        <li><a href="#61-eslint">6.1 Eslint</a>
           <ol>
             <li><a href="#611-配置文件">6.1.1 配置文件</a></li>
           </ol>
         </li>
+        <li><a href="#62-babel">6.2 Babel</a>
+          <ol>
+            <li><a href="#621-配置文件">6.2.1 配置文件</a></li>
+          </ol>
+        </li>
       </ol>
     </li>
+    <li><a href="#7处理html资源">7.处理html资源</a></li>
+    <li><a href="#8开发服务器自动化">8.开发服务器&amp;自动化</a></li>
+    <li><a href="#9css处理">9.css处理</a></li>
   </ol>
 </nav>
         </div>
@@ -358,6 +366,10 @@
         
             <a href="/categories/%E9%9D%A2%E8%AF%95/" >
                 面试
+            </a>
+        
+            <a href="/categories/webpack%E5%9F%BA%E7%A1%80/" >
+                Webpack基础
             </a>
         
     </header>
@@ -402,7 +414,7 @@
 
 
                 <time class="article-time--reading">
-                    阅读时长: 4 分钟
+                    阅读时长: 6 分钟
                 </time>
             </div>
         
@@ -531,7 +543,7 @@ webpack4已经将这两个loader功能内置在webpack中，所以不需要再�
 <li>针对代码质量，使用stylelint完成</li>
 </ul>
 <p>先完成eslint，检测代码格式，再检测代码质量，再检测css兼容性，再检测html兼容性，再检测js兼容性。</p>
-<h3 id="61-eslint">6.1 eslint
+<h3 id="61-eslint">6.1 Eslint
 </h3><p>eslint是一个代码格式检测工具，可以检测js/jsx/ts代码格式是否正确，不符合规范会报错。</p>
 <h4 id="611-配置文件">6.1.1 配置文件
 </h4><p>配置文件有多种写法：</p>
@@ -546,6 +558,71 @@ webpack4已经将这两个loader功能内置在webpack中，所以不需要再�
 </li>
 <li><code>package.json</code>中<code>eslintConfig</code>:不需要创建文件，在原有文件基础上写。</li>
 </ul>
+<h3 id="62-babel">6.2 Babel
+</h3><p>babel是一个js编译器，可以将es6语法编译成es5语法，让浏览器能识别。</p>
+<h4 id="621-配置文件">6.2.1 配置文件
+</h4><p>配置文件有多种写法：</p>
+<ul>
+<li><code>babel.config.js</code>: 新建文件，位于项目根目录下，文件名可以自定义，后缀名可以自定义，文件内容可以自定义，文件内容可以写json、yaml、js、ts等格式。</li>
+<li><code>.babelrc.*</code>: 新建文件，位于项目根目录下，文件名可以自定义，后缀名可以自定义，文件内容可以自定义，文件内容可以写json、yaml、js、ts等格式。</li>
+<li>在<code>package.json</code>中<code>babel</code>: 不需要创建文件，在原有文件基础上写。</li>
+</ul>
+<h2 id="7处理html资源">7.处理html资源
+</h2><p>手动引入的js不需要了，通过插件自动引入
+通过插件HtmlWebpackPlugin</p>
+<h2 id="8开发服务器自动化">8.开发服务器&amp;自动化
+</h2><p>每次都需要改动打包后才能看到效果 非常麻烦，希望一切自动化
+通过插件webpack-dev-server
+<code>npx webpack serve</code> 启动命令
+监视文件 一旦发现变化 就立刻打包
+也叫做热更新 会自动刷新页面
+<code>npx webpack serve --config ./config/webpack.dev.js</code> 开发模式运行
+<code>npx webpack --config ./config/webpack.prod.js</code> 生产模式打包(代码会压缩)</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="c1">// package.json中的一些启动命令配置
+</span></span></span><span class="line"><span class="cl"><span class="c1">// 除了start 命令，其他命令都是通过 npm run 命令来执行的
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="s2">&#34;scripts&#34;</span><span class="o">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="s2">&#34;start&#34;</span><span class="o">:</span> <span class="s2">&#34;npm run dev&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="s2">&#34;dev&#34;</span><span class="o">:</span> <span class="s2">&#34;webpack serve --config ./config/webpack.dev.js&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="s2">&#34;build&#34;</span><span class="o">:</span> <span class="s2">&#34;webpack --config ./config/webpack.prod.js&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="9css处理">9.css处理
+</h2><p><strong>提取css成为单独的文件</strong>
+css文件目前被打包到js文件中，当js加载时，会创建一个style标签来生成样式，有可能出现闪屏现象（先解析js再解析css），用户体验不好，单独的css文件通过link标签加载，性能会更好。</p>
+<p><strong>css的兼容性处理</strong>
+css的兼容性处理，主要是针对IE浏览器，IE浏览器不支持css3新特性，需要做兼容性处理。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="c1">// 在package.json中添加以下代码 进行浏览器的兼容性程度配置
+</span></span></span><span class="line"><span class="cl"><span class="c1">// 三个参数取交集 （最近的两个版本要覆盖99%的浏览器 其中已死的浏览器不要）
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="s2">&#34;browserslist&#34;</span><span class="o">:</span><span class="p">[</span>
+</span></span><span class="line"><span class="cl">  <span class="s2">&#34;last 2 version&#34;</span><span class="p">,</span> <span class="s2">&#34;&gt; 1%&#34;</span><span class="p">,</span> <span class="s2">&#34;not dead&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="p">]</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>在css中，使用浏览器前缀来兼容不同版本的浏览器。以下是一些常见的浏览器前缀: 前缀有-webkit、-moz、-ms、-o。</p>
+<p><strong>css压缩</strong>
+采用CssMinimizerPlugin插件进行配置</p>
+<p><strong>就此webpack基础部分已完结~~~</strong></p>
 
 </section>
 
@@ -579,6 +656,19 @@ webpack4已经将这两个loader功能内置在webpack中，所以不需要再�
     <h2 class="section-title">相关文章</h2>
     <div class="related-content">
         <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/p/webpack%E9%AB%98%E7%BA%A7/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">webpack高级</h2>
+        </div>
+    </a>
+</article>
+
             
                 
 <article class="has-image">

@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>Webpack基础 on 个人博客</title>
+        <link>http://localhost:56502/categories/webpack%E5%9F%BA%E7%A1%80/</link>
+        <description>Recent content in Webpack基础 on 个人博客</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>zh-cn</language>
+        <copyright>dundun</copyright>
+        <lastBuildDate>Thu, 20 Mar 2025 23:33:55 +0800</lastBuildDate><atom:link href="http://localhost:56502/categories/webpack%E5%9F%BA%E7%A1%80/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>webpack基础</title>
+        <link>http://localhost:56502/p/webpack%E5%9F%BA%E7%A1%80/</link>
+        <pubDate>Thu, 20 Mar 2025 23:33:55 +0800</pubDate>
+        
+        <guid>http://localhost:56502/p/webpack%E5%9F%BA%E7%A1%80/</guid>
+        <description>&lt;h1 id=&#34;webpack&#34;&gt;webpack
+&lt;/h1&gt;&lt;h2 id=&#34;1前言&#34;&gt;1.前言
+&lt;/h2&gt;&lt;h3 id=&#34;11-为什么需要打包工具&#34;&gt;1.1 为什么需要打包工具
+&lt;/h3&gt;&lt;p&gt;开发时，会使用框架(React/vue),ES6模块化语法，less、sass等css预处理器等语法进行开发。
+这样的代码想在浏览器运行必须经过编译成浏览器能识别的js、css等语法才能运行。
+所以需要打包工具，同时打包工具还能压缩代码、做兼容性处理、提升代码性能等。&lt;/p&gt;
+&lt;h3 id=&#34;12-有哪些打包工具&#34;&gt;1.2 有哪些打包工具
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;Grunt&lt;/li&gt;
+&lt;li&gt;Gulp&lt;/li&gt;
+&lt;li&gt;Parcel&lt;/li&gt;
+&lt;li&gt;Rollup&lt;/li&gt;
+&lt;li&gt;Webpack&lt;/li&gt;
+&lt;li&gt;Vite&lt;/li&gt;
+&lt;li&gt;&amp;hellip;&amp;hellip;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;2基本使用&#34;&gt;2.基本使用
+&lt;/h2&gt;&lt;p&gt;webpack是一个静态资源打包工具。
+它会以一个或者多个文件作为打包的入口，将我们整个项目所有文件编译组合成一个或者多个文件输出出去。
+输出的文件就是编译好的文件，可以在浏览器运行。
+webpack输出的文件叫做bundle。&lt;/p&gt;
+&lt;h3 id=&#34;21-功能介绍&#34;&gt;2.1 功能介绍
+&lt;/h3&gt;&lt;p&gt;webpack本身功能是有限的。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;开发模式：仅能编译JS中的ES Module语法&lt;/li&gt;
+&lt;li&gt;生产模式：能编译JS中的ES Module语法，还能压缩代码&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;22-开始使用&#34;&gt;2.2 开始使用
+&lt;/h3&gt;&lt;h4 id=&#34;221-资源目录&#34;&gt;2.2.1 资源目录
+&lt;/h4&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;npm init -y 初始化包文件&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;package.json&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;npm i webpack webpack-cli -D 安装后可以执行webpack指令
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;npx 将node_modules中的.bin文件临时添加为环境变量 这样可以在控制台之间访问一些命令
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;npx webpack ./src/main.js --mode&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;development 指定模式打包（此处为开发模式） prodution为生产模式 体积很小
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;默认webpack会将打包文件输出到dist目录下&lt;/p&gt;
+&lt;p&gt;webpack本身功能比较少，只能处理js资源，一旦遇到css等其他资源就会报错。&lt;/p&gt;
+&lt;h2 id=&#34;3基本配置&#34;&gt;3.基本配置
+&lt;/h2&gt;&lt;p&gt;commonJS模块化&lt;/p&gt;
+&lt;h3 id=&#34;31-五个核心概念&#34;&gt;3.1 五个核心概念
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;entry（入口）
+指示webpack从哪个文件开始打包&lt;/li&gt;
+&lt;li&gt;output（输出）
+指示webpack打包完的文件输出到哪里去，如何命名&lt;/li&gt;
+&lt;li&gt;loader（加载器）
+webpack本身只能处理js、json等资源，其他资源需要借助loader，webpack才能解析&lt;/li&gt;
+&lt;li&gt;plugins（插件）
+扩展webpack的功能&lt;/li&gt;
+&lt;li&gt;mode（模式）
+主要有两种模式：开发模式和生产模式&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;npx webpack 在项目中找到webpack.config.js进行配置读取 执行相应的打包动作
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id=&#34;32-开发模式介绍&#34;&gt;3.2 开发模式介绍
+&lt;/h3&gt;&lt;p&gt;开发代码使用的模式。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;编译代码，使浏览器识别运行&lt;/li&gt;
+&lt;li&gt;代码质量检查，树立代码规范&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;33-生产模式介绍&#34;&gt;3.3 生产模式介绍
+&lt;/h3&gt;&lt;h2 id=&#34;4处理样式资源&#34;&gt;4.处理样式资源
+&lt;/h2&gt;&lt;p&gt;webpack本身不能识别样式资源，需要借助loader帮忙解析&lt;/p&gt;
+&lt;h3 id=&#34;41-处理css资源&#34;&gt;4.1 处理css资源
+&lt;/h3&gt;&lt;p&gt;官方文档可看（css-loader、style-loader）&lt;/p&gt;
+&lt;h3 id=&#34;42-处理less资源&#34;&gt;4.2 处理less资源
+&lt;/h3&gt;&lt;p&gt;官方文档可看（less-loader）&lt;/p&gt;
+&lt;h3 id=&#34;43-处理sass和scss资源&#34;&gt;4.3 处理sass和scss资源
+&lt;/h3&gt;&lt;p&gt;官方文档可看（sass-loader、scss-loader）&lt;/p&gt;
+&lt;h3 id=&#34;44-处理stylus资源&#34;&gt;4.4 处理stylus资源
+&lt;/h3&gt;&lt;p&gt;官方文档可看（stylus-loader）
+在样式文件中逗号、冒号、分号等符号可以省略&lt;/p&gt;
+&lt;h2 id=&#34;5处理图片资源&#34;&gt;5.处理图片资源
+&lt;/h2&gt;&lt;p&gt;在webpack4中处理图片资源通过file-loader和url-loader进行处理
+webpack4已经将这两个loader功能内置在webpack中，所以不需要再安装，简单配置即可。&lt;/p&gt;
+&lt;p&gt;图片转为base64编码（长字符串），减少http请求次数，减小服务器压力。缺点：Base64编码后体积增加约33%。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;每张图片都是一个独立的文件，浏览器需要为每个文件发起一次 HTTP 请求。&lt;/li&gt;
+&lt;li&gt;图片数据被转换为字符串，直接嵌入到代码文件中。当浏览器加载代码文件时，图片数据已经包含在其中，无需额外请求。&lt;/li&gt;
+&lt;li&gt;将小图片转为 Base64 编码后内联到代码文件中，通过“合并请求”减少了 HTTP 请求次数，但需要权衡体积、缓存等因素。通常建议仅对极小且不常变动的图片使用这种方式。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;51-处理字体图标资源&#34;&gt;5.1 处理字体图标资源
+&lt;/h3&gt;&lt;p&gt;iconfont矢量图标&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Unicode IE6以上能用 兼容性较好&lt;/li&gt;
+&lt;li&gt;Font class IE8以上能用 用法简单 比较推荐&lt;/li&gt;
+&lt;li&gt;Symbol IE9以上能用&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;52-处理其他资源&#34;&gt;5.2 处理其他资源
+&lt;/h3&gt;&lt;p&gt;如音视频资源、excel/zip等资源&lt;/p&gt;
+&lt;h2 id=&#34;6处理js资源&#34;&gt;6.处理js资源
+&lt;/h2&gt;&lt;p&gt;做兼容性处理，对代码格式进行要求，用专业工具检测代码格式否符合规范，不符合规范会报错。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;针对js兼容性处理，使用babel完成 *&lt;/li&gt;
+&lt;li&gt;针对css兼容性处理，使用postcss完成&lt;/li&gt;
+&lt;li&gt;针对html兼容性处理，使用html-webpack-plugin完成&lt;/li&gt;
+&lt;li&gt;针对代码格式，使用eslint完成 *&lt;/li&gt;
+&lt;li&gt;针对代码质量，使用stylelint完成&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;先完成eslint，检测代码格式，再检测代码质量，再检测css兼容性，再检测html兼容性，再检测js兼容性。&lt;/p&gt;
+&lt;h3 id=&#34;61-eslint&#34;&gt;6.1 Eslint
+&lt;/h3&gt;&lt;p&gt;eslint是一个代码格式检测工具，可以检测js/jsx/ts代码格式是否正确，不符合规范会报错。&lt;/p&gt;
+&lt;h4 id=&#34;611-配置文件&#34;&gt;6.1.1 配置文件
+&lt;/h4&gt;&lt;p&gt;配置文件有多种写法：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;.eslintrc.*&lt;/code&gt;: 新建文件，位于项目根目录下，文件名可以自定义，后缀名可以自定义，文件内容可以自定义，文件内容可以写json、yaml、js、ts等格式。
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;.eslintrc&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;.eslintrc.js&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;.eslintrc.json&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;区别在于配置格式不一样&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;package.json&lt;/code&gt;中&lt;code&gt;eslintConfig&lt;/code&gt;:不需要创建文件，在原有文件基础上写。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;62-babel&#34;&gt;6.2 Babel
+&lt;/h3&gt;&lt;p&gt;babel是一个js编译器，可以将es6语法编译成es5语法，让浏览器能识别。&lt;/p&gt;
+&lt;h4 id=&#34;621-配置文件&#34;&gt;6.2.1 配置文件
+&lt;/h4&gt;&lt;p&gt;配置文件有多种写法：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;babel.config.js&lt;/code&gt;: 新建文件，位于项目根目录下，文件名可以自定义，后缀名可以自定义，文件内容可以自定义，文件内容可以写json、yaml、js、ts等格式。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;.babelrc.*&lt;/code&gt;: 新建文件，位于项目根目录下，文件名可以自定义，后缀名可以自定义，文件内容可以自定义，文件内容可以写json、yaml、js、ts等格式。&lt;/li&gt;
+&lt;li&gt;在&lt;code&gt;package.json&lt;/code&gt;中&lt;code&gt;babel&lt;/code&gt;: 不需要创建文件，在原有文件基础上写。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;7处理html资源&#34;&gt;7.处理html资源
+&lt;/h2&gt;&lt;p&gt;手动引入的js不需要了，通过插件自动引入
+通过插件HtmlWebpackPlugin&lt;/p&gt;
+&lt;h2 id=&#34;8开发服务器自动化&#34;&gt;8.开发服务器&amp;amp;自动化
+&lt;/h2&gt;&lt;p&gt;每次都需要改动打包后才能看到效果 非常麻烦，希望一切自动化
+通过插件webpack-dev-server
+&lt;code&gt;npx webpack serve&lt;/code&gt; 启动命令
+监视文件 一旦发现变化 就立刻打包
+也叫做热更新 会自动刷新页面
+&lt;code&gt;npx webpack serve --config ./config/webpack.dev.js&lt;/code&gt; 开发模式运行
+&lt;code&gt;npx webpack --config ./config/webpack.prod.js&lt;/code&gt; 生产模式打包(代码会压缩)&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;7
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;// package.json中的一些启动命令配置
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;// 除了start 命令，其他命令都是通过 npm run 命令来执行的
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;scripts&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  &lt;span class=&#34;s2&#34;&gt;&amp;#34;start&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;npm run dev&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  &lt;span class=&#34;s2&#34;&gt;&amp;#34;dev&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;webpack serve --config ./config/webpack.dev.js&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  &lt;span class=&#34;s2&#34;&gt;&amp;#34;build&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;webpack --config ./config/webpack.prod.js&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h2 id=&#34;9css处理&#34;&gt;9.css处理
+&lt;/h2&gt;&lt;p&gt;&lt;strong&gt;提取css成为单独的文件&lt;/strong&gt;
+css文件目前被打包到js文件中，当js加载时，会创建一个style标签来生成样式，有可能出现闪屏现象（先解析js再解析css），用户体验不好，单独的css文件通过link标签加载，性能会更好。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;css的兼容性处理&lt;/strong&gt;
+css的兼容性处理，主要是针对IE浏览器，IE浏览器不支持css3新特性，需要做兼容性处理。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;// 在package.json中添加以下代码 进行浏览器的兼容性程度配置
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;// 三个参数取交集 （最近的两个版本要覆盖99%的浏览器 其中已死的浏览器不要）
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;browserslist&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  &lt;span class=&#34;s2&#34;&gt;&amp;#34;last 2 version&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;&amp;gt; 1%&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;not dead&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;在css中，使用浏览器前缀来兼容不同版本的浏览器。以下是一些常见的浏览器前缀: 前缀有-webkit、-moz、-ms、-o。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;css压缩&lt;/strong&gt;
+采用CssMinimizerPlugin插件进行配置&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;就此webpack基础部分已完结~~~&lt;/strong&gt;&lt;/p&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

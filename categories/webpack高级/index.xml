@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>Webpack高级 on 个人博客</title>
+        <link>http://localhost:56502/categories/webpack%E9%AB%98%E7%BA%A7/</link>
+        <description>Recent content in Webpack高级 on 个人博客</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>zh-cn</language>
+        <copyright>dundun</copyright>
+        <lastBuildDate>Sat, 22 Mar 2025 20:26:45 +0800</lastBuildDate><atom:link href="http://localhost:56502/categories/webpack%E9%AB%98%E7%BA%A7/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>webpack高级</title>
+        <link>http://localhost:56502/p/webpack%E9%AB%98%E7%BA%A7/</link>
+        <pubDate>Sat, 22 Mar 2025 20:26:45 +0800</pubDate>
+        
+        <guid>http://localhost:56502/p/webpack%E9%AB%98%E7%BA%A7/</guid>
+        <description>&lt;h1 id=&#34;webpack高级&#34;&gt;webpack高级
+&lt;/h1&gt;&lt;p&gt;为了让代码在编译/运行时的性能更好，从以下角度进行优化：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;提升开发体验&lt;/li&gt;
+&lt;li&gt;提升打包构建速度&lt;/li&gt;
+&lt;li&gt;减少代码体积&lt;/li&gt;
+&lt;li&gt;优化代码运行性能&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;1提升开发体验&#34;&gt;1.提升开发体验
+&lt;/h2&gt;&lt;p&gt;&lt;strong&gt;SourceMap&lt;/strong&gt;
+SourceMap是webpack提供的一个功能，可以方便调试代码，让浏览器可以显示源码，而不是编译后的代码。让浏览器提示源代码文件出错位置，快速找到错误根源。
+SourceMap（源代码映射）会生成一个xxx.map文件，这个文件就是用来映射源代码和编译后的代码之间的对应关系。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;使用&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;开发模式：&lt;code&gt;clean-module-source-map&lt;/code&gt;
+&lt;ul&gt;
+&lt;li&gt;优点：打包编译速度快，只包含行映射&lt;/li&gt;
+&lt;li&gt;缺点：没有列映射&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;生产模式：&lt;code&gt;source-map&lt;/code&gt;
+&lt;ul&gt;
+&lt;li&gt;优点：包含行和列映射&lt;/li&gt;
+&lt;li&gt;缺点：打包编译速度慢，文件大&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;2提升打包构建速度&#34;&gt;2.提升打包构建速度
+&lt;/h2&gt;&lt;p&gt;修改了一个模块时，webpack默认会将所有代码全部重新打包编译，速度很慢。所以需要做到修改某个模块，就只有这个模块代码要重新打包编译，这样打包速度会很快。&lt;/p&gt;
+&lt;h3 id=&#34;hotmodulereplacement&#34;&gt;&lt;strong&gt;HotModuleReplacement&lt;/strong&gt;
+&lt;/h3&gt;&lt;p&gt;&lt;code&gt;HotModuleReplacement&lt;/code&gt;（HMR/热模块替换）：在程序运行中，替换、添加或删除代码，不重载整个页面。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;// 当修改css模块 控制台会打印以下信息 不会重载整个页面
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;HMR&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;  &lt;span class=&#34;o&#34;&gt;-&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;src&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;css&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;index&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;css&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;8
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;// 当修改js模块 控制台会打印以下信息 不会重载整个页面
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;HMR&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;  &lt;span class=&#34;o&#34;&gt;-&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;src&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;js&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;count&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;js&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;module&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;hot&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  &lt;span class=&#34;c1&#34;&gt;// 判断是否支持热更新
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;  &lt;span class=&#34;nx&#34;&gt;module&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;hot&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;accept&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;./js/count.js&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  &lt;span class=&#34;nx&#34;&gt;module&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;hot&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;accept&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;./js/sum.js&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;如果将来开发项目，会使用其他的loader来解决：如vue-loader、react-hot-loader。
+HMR开发模式可以，生产模式不行。&lt;/p&gt;
+&lt;h3 id=&#34;oneof&#34;&gt;&lt;strong&gt;oneOf&lt;/strong&gt;
+&lt;/h3&gt;&lt;p&gt;保证每个文件只能被其中一个loader配置处理，减少打包时间&lt;/p&gt;
+&lt;p&gt;不加oneOf,就是if/if/if执行，加了则是if/else if/else执行&lt;/p&gt;
+&lt;h3 id=&#34;includeexclude&#34;&gt;&lt;strong&gt;include/exclude&lt;/strong&gt;
+&lt;/h3&gt;&lt;p&gt;检测文件是否需要被loader处理，只针对js文件，css文件不需要&lt;/p&gt;
+&lt;h3 id=&#34;cache&#34;&gt;&lt;strong&gt;Cache&lt;/strong&gt;
+&lt;/h3&gt;&lt;p&gt;每次打包时js文件都要经过Eslint检查和Babel编译，如果文件内容没有变化，就不需要重复执行，可以缓存起来，提高打包速度。&lt;/p&gt;
+&lt;h3 id=&#34;thead&#34;&gt;&lt;strong&gt;Thead&lt;/strong&gt;
+&lt;/h3&gt;&lt;p&gt;多个loader并行执行，提高打包速度。&lt;/p&gt;
+&lt;p&gt;对js文件处理主要是eslint、babel、terser三个工具，所以要提升它们的运行速度。&lt;/p&gt;
+&lt;p&gt;多进程打包：开启电脑的多个进程同时干一件事，速度更快。
+需要注意：仅在特别耗时的操作中使用，因为每个进程就有大约600ms左右的开销。&lt;/p&gt;
+&lt;p&gt;启动进程的数量就是CPU的核数。&lt;/p&gt;
+&lt;h2 id=&#34;3减少代码体积&#34;&gt;3.减少代码体积
+&lt;/h2&gt;&lt;p&gt;开发时引用了第三方工具函数库或者组件库。&lt;/p&gt;
+&lt;p&gt;如果没有特殊处理的话打包时会打包引入整个库，但实际上我们可能只用了很小的一部分功能。如果整个库都打包，那么体积就会很大。&lt;/p&gt;
+&lt;h3 id=&#34;tree-shaking&#34;&gt;&lt;strong&gt;Tree Shaking&lt;/strong&gt;
+&lt;/h3&gt;&lt;p&gt;通常用于描述移除javascript代码中未引用的代码。它依赖于ES Module。&lt;/p&gt;
+&lt;p&gt;webpack的配置中默认开启了Tree Shaking。&lt;/p&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>
