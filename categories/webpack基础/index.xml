@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
     <channel>
         <title>Webpack基础 on 个人博客</title>
-        <link>http://localhost:56502/categories/webpack%E5%9F%BA%E7%A1%80/</link>
+        <link>http://localhost:1313/categories/webpack%E5%9F%BA%E7%A1%80/</link>
         <description>Recent content in Webpack基础 on 个人博客</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-cn</language>
         <copyright>dundun</copyright>
-        <lastBuildDate>Thu, 20 Mar 2025 23:33:55 +0800</lastBuildDate><atom:link href="http://localhost:56502/categories/webpack%E5%9F%BA%E7%A1%80/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Thu, 20 Mar 2025 23:33:55 +0800</lastBuildDate><atom:link href="http://localhost:1313/categories/webpack%E5%9F%BA%E7%A1%80/index.xml" rel="self" type="application/rss+xml" /><item>
         <title>webpack基础</title>
-        <link>http://localhost:56502/p/webpack%E5%9F%BA%E7%A1%80/</link>
+        <link>http://localhost:1313/p/webpack%E5%9F%BA%E7%A1%80/</link>
         <pubDate>Thu, 20 Mar 2025 23:33:55 +0800</pubDate>
         
-        <guid>http://localhost:56502/p/webpack%E5%9F%BA%E7%A1%80/</guid>
+        <guid>http://localhost:1313/p/webpack%E5%9F%BA%E7%A1%80/</guid>
         <description>&lt;h1 id=&#34;webpack&#34;&gt;webpack
 &lt;/h1&gt;&lt;h2 id=&#34;1前言&#34;&gt;1.前言
 &lt;/h2&gt;&lt;h3 id=&#34;11-为什么需要打包工具&#34;&gt;1.1 为什么需要打包工具
