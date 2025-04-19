@@ -7,20 +7,28 @@
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-cn</language>
         <copyright>dundun</copyright>
-        <lastBuildDate>Sat, 22 Mar 2025 20:26:45 +0800</lastBuildDate><atom:link href="http://localhost:1313/categories/index.xml" rel="self" type="application/rss+xml" /><item>
-        <title>Webpack高级</title>
-        <link>http://localhost:1313/categories/webpack%E9%AB%98%E7%BA%A7/</link>
-        <pubDate>Sat, 22 Mar 2025 20:26:45 +0800</pubDate>
+        <lastBuildDate>Wed, 26 Mar 2025 20:11:27 +0800</lastBuildDate><atom:link href="http://localhost:1313/categories/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>Loader篇</title>
+        <link>http://localhost:1313/categories/loader%E7%AF%87/</link>
+        <pubDate>Wed, 26 Mar 2025 20:11:27 +0800</pubDate>
         
-        <guid>http://localhost:1313/categories/webpack%E9%AB%98%E7%BA%A7/</guid>
+        <guid>http://localhost:1313/categories/loader%E7%AF%87/</guid>
         <description></description>
         </item>
         <item>
         <title>面试</title>
         <link>http://localhost:1313/categories/%E9%9D%A2%E8%AF%95/</link>
-        <pubDate>Sat, 22 Mar 2025 20:26:45 +0800</pubDate>
+        <pubDate>Wed, 26 Mar 2025 20:11:27 +0800</pubDate>
         
         <guid>http://localhost:1313/categories/%E9%9D%A2%E8%AF%95/</guid>
+        <description></description>
+        </item>
+        <item>
+        <title>Webpack高级</title>
+        <link>http://localhost:1313/categories/webpack%E9%AB%98%E7%BA%A7/</link>
+        <pubDate>Sat, 22 Mar 2025 20:26:45 +0800</pubDate>
+        
+        <guid>http://localhost:1313/categories/webpack%E9%AB%98%E7%BA%A7/</guid>
         <description></description>
         </item>
         <item>

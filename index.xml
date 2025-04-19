@@ -7,7 +7,31 @@
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-cn</language>
         <copyright>dundun</copyright>
-        <lastBuildDate>Sat, 22 Mar 2025 20:26:45 +0800</lastBuildDate><atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Wed, 26 Mar 2025 20:11:27 +0800</lastBuildDate><atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>webpack之loader</title>
+        <link>http://localhost:1313/p/webpack%E4%B9%8Bloader/</link>
+        <pubDate>Wed, 26 Mar 2025 20:11:27 +0800</pubDate>
+        
+        <guid>http://localhost:1313/p/webpack%E4%B9%8Bloader/</guid>
+        <description>&lt;h1 id=&#34;loader原理&#34;&gt;Loader原理
+&lt;/h1&gt;&lt;h2 id=&#34;loader概念&#34;&gt;loader概念
+&lt;/h2&gt;&lt;p&gt;帮助webpack将不同类型的文件转换为webpack可识别的模块&lt;/p&gt;
+&lt;h3 id=&#34;loader执行顺序&#34;&gt;loader执行顺序
+&lt;/h3&gt;&lt;p&gt;&lt;strong&gt;分类&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;pre：前置loader&lt;/li&gt;
+&lt;li&gt;normal：普通loader&lt;/li&gt;
+&lt;li&gt;inline：内联loader&lt;/li&gt;
+&lt;li&gt;post：后置loader&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;执行顺序&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;四类loader的执行顺序是：pre -&amp;gt; normal -&amp;gt; inline -&amp;gt; post&lt;/li&gt;
+&lt;li&gt;相同优先级的loader执行顺序：从右到左或从下到上&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+        </item>
+        <item>
         <title>webpack高级</title>
         <link>http://localhost:1313/p/webpack%E9%AB%98%E7%BA%A7/</link>
         <pubDate>Sat, 22 Mar 2025 20:26:45 +0800</pubDate>
